@@ -46,6 +46,11 @@ Walk the diff against these, in addition to normal correctness/simplification re
 - New buttons/inputs/labels/cards use `components/ui/*` (extending with a variant if needed) rather than new one-off Tailwind class strings duplicating existing primitives.
 - Class merging goes through `cn()` from `lib/cn.ts`, not manual template-literal concatenation.
 
+**Local Supabase config**
+
+- Ports in `supabase/config.toml` stay as `env(SUPABASE_*_PORT)` references, not hardcoded numbers — a hardcoded port reintroduces the multi-instance collision the current setup avoids.
+- Any `supabase` CLI invocation added to scripts/docs goes through `npm run supabase -- <command>` (or the `supabase:*` scripts), not a bare `supabase` call — bare calls skip `scripts/supabase.mjs` and will fail to parse config unless every `SUPABASE_*_PORT` var happens to already be set.
+
 **Database changes**
 
 - Any change under `supabase/` (migrations, schema) — hand off to the `supabase-postgres-best-practices` skill for the schema/RLS-level review; this skill only flags that such a review is needed, it doesn't replace it.
