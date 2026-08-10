@@ -12,6 +12,11 @@ A starter template built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 - Vitest + Testing Library
 - Supabase client helpers for browser, server, and proxy usage
 - Local Supabase configuration in `/supabase`
+- Email/password auth example (`/login`, `/protected`, `app/auth/callback`)
+- Reusable UI primitives in `components/ui` (Button, Input, Label, Card)
+- GitHub Actions CI (lint, typecheck, format check, test, build) required on `main` via branch protection
+- Husky pre-push hook running lint, typecheck, and test before every push
+- `.claude/skills/app-conventions` and `.claude/skills/pr-review` documenting this template's conventions and a stack-specific PR review checklist for Claude Code
 
 ## Local setup
 
@@ -54,12 +59,27 @@ npm run supabase:stop
 
 After the stack starts, update `.env.local` with the URL and anon key for your project.
 
+## Auth example
+
+`/login` demonstrates the Supabase email/password flow using server actions (`app/login/actions.ts`), and `/protected` demonstrates a page that redirects to `/login` when there's no session. `app/auth/callback/route.ts` handles the redirect used by email confirmation / OAuth code exchange. Use these as the starting point for real auth flows.
+
+## UI primitives
+
+`components/ui` has small, typed Tailwind components (`Button`, `Input`, `Label`, `Card`) used throughout the template. Prefer extending these over writing new one-off styled elements.
+
+## Quality gates
+
+- `.husky/pre-push` runs `lint`, `typecheck`, and `test` before every `git push` (installed automatically by `npm install` via the `prepare` script).
+- `.github/workflows/ci.yml` runs `lint`, `typecheck`, `format:check`, `test`, and `build` on every push and PR, using placeholder Supabase env vars.
+- The `main` branch requires the CI `build` job to pass before a PR can merge (GitHub branch protection, no admin bypass).
+
 ## Scripts
 
 - `npm run dev` - start the Next.js dev server
 - `npm run build` - create a production build
 - `npm run start` - run the production server
 - `npm run lint` - run ESLint
+- `npm run typecheck` - generate route types and run `tsc --noEmit`
 - `npm run format` - format files with Prettier
 - `npm run format:check` - verify Prettier formatting
 - `npm run test` - run tests once

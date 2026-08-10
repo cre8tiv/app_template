@@ -1,3 +1,7 @@
+import Link from "next/link";
+
+import { Card } from "@/components/ui/card";
+
 type StarterHomeProps = {
   hasSupabaseEnv: boolean;
 };
@@ -31,7 +35,7 @@ const commands = [
 export function StarterHome({ hasSupabaseEnv }: StarterHomeProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 py-16">
-      <section className="rounded-3xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-950">
+      <Card className="rounded-3xl p-8">
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-sm font-medium text-emerald-700 dark:text-emerald-300">
             Next.js + Tailwind + Supabase
@@ -61,23 +65,34 @@ export function StarterHome({ hasSupabaseEnv }: StarterHomeProps) {
             ? "Supabase environment variables are configured."
             : "Supabase environment variables are not configured yet. Copy .env.example to .env.local to get started."}
         </div>
-      </section>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/login"
+            className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          >
+            View auth example
+          </Link>
+          <Link
+            href="/protected"
+            className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+          >
+            View protected page example
+          </Link>
+        </div>
+      </Card>
 
       <section className="grid gap-4 md:grid-cols-3">
         {steps.map((step) => (
-          <article
-            key={step.title}
-            className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-zinc-950"
-          >
+          <Card key={step.title}>
             <h2 className="text-lg font-semibold">{step.title}</h2>
             <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
               {step.description}
             </p>
-          </article>
+          </Card>
         ))}
       </section>
 
-      <section className="rounded-2xl border border-black/10 bg-zinc-50 p-6 dark:border-white/10 dark:bg-zinc-900">
+      <Card className="bg-zinc-50 dark:bg-zinc-900">
         <h2 className="text-lg font-semibold">Useful commands</h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {commands.map((command) => (
@@ -89,7 +104,7 @@ export function StarterHome({ hasSupabaseEnv }: StarterHomeProps) {
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
     </main>
   );
 }
