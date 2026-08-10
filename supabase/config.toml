@@ -1,0 +1,52 @@
+project_id = "app-template"
+
+# Ports below are read from environment variables so multiple instances of this
+# template (or unrelated local services) can run side by side without port
+# clashes. Defaults live in scripts/supabase.mjs; override any of them in
+# .env.local (see .env.example) and always run the CLI via `npm run
+# supabase:*` (or `npm run supabase -- <command>`) so the overrides apply to
+# every subcommand, not just `start`.
+[api]
+enabled = true
+port = "env(SUPABASE_API_PORT)"
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = "env(SUPABASE_DB_PORT)"
+shadow_port = "env(SUPABASE_DB_SHADOW_PORT)"
+major_version = 17
+
+[studio]
+enabled = true
+port = "env(SUPABASE_STUDIO_PORT)"
+api_url = "http://127.0.0.1"
+
+# Mailpit: catches emails sent by the local stack (auth confirmations, password
+# resets, magic links, etc.) instead of delivering them. View them at
+# http://127.0.0.1:<SUPABASE_MAILPIT_PORT> (54324 by default).
+[local_smtp]
+enabled = true
+port = "env(SUPABASE_MAILPIT_PORT)"
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+# Not used by this template; disabled to avoid an extra fixed-port collision
+# (54327) and the added container overhead.
+[analytics]
+enabled = false
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = ["http://127.0.0.1:3000"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
