@@ -1,16 +1,19 @@
 # Starter setup: one project, small team
 
 ## What this is
-A tech lead + 2 ICs (one generalist, one backend specialist) for a single project. 
+
+A tech lead + 2 ICs (one generalist, one backend specialist) for a single project.
 
 ## Setup
 
 1. Copy these three `.md` files into your project's `.claude/agents/` directory:
+
    ```
    cp tech-lead.md ic-generalist.md ic-specialist-backend.md /path/to/project/.claude/agents/
    ```
 
 2. Enable agent teams for the session:
+
    ```
    export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
    claude
@@ -37,4 +40,5 @@ A tech lead + 2 ICs (one generalist, one backend specialist) for a single projec
 - Only add the second top-level lead + mutual-restart layer once you're running multiple projects in parallel and the single-lead check-in load gets heavy — it's not worth the complexity for one project.
 
 ## Costs to watch
+
 Each teammate is a full Claude instance with its own context window. A 3-agent team (lead + 2 ICs) running for a day is meaningfully more token spend than one Claude Code session — worth watching usage for the first week before deciding whether to scale wider.
