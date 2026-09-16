@@ -22,11 +22,14 @@ Modes:
   /caveman lite         lighter
   /caveman ultra        extreme
   /caveman wenyan       classical Chinese
+  /caveman wenyan-lite  classical Chinese, light
+  /caveman wenyan-ultra classical Chinese, extreme
 
 Skills:
-  /caveman-commit       terse Conventional Commits
-  /caveman-review       one-line PR comments
-  /caveman-stats        session token savings
+  /caveman-commit        terse Conventional Commits
+  /caveman-review        one-line PR comments
+  /caveman-compress <f>  compress .md files (~46% token savings)
+  /caveman-stats         session token savings
 
 Deactivate:
   "stop caveman" or "normal mode"

@@ -15,7 +15,7 @@ A tech lead + 2 ICs (one generalist, one backend specialist) + a code reviewer f
 2. Enable agent teams for the session:
 
    ```
-   export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+   $env:CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
    claude
    ```
 

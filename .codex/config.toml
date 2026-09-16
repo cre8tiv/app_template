@@ -1,35 +1,24 @@
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
 [projects]
 # Automatically trusts the workspace context to minimize confirmation prompts
 "C:\\Projects\\featurly" = { trust_level = "trusted" }
-
-sandbox_mode = "workspace-write"
-
-approval_policy = "on-request"
 
 # ----------------------------------------------------
 # Multi-Agent Architecture and Model Routing
 # ----------------------------------------------------
 [agents.tech-lead]
-config_file = ".codex/agents/tech-lead.md"
-model = "gpt-5.6-sol"
-reasoning_effort = "high"
+config_file = "agents/tech-lead.toml"
 
 [agents.code-reviewer]
-config_file = ".codex/agents/code-reviewer.md"
-model = "gpt-5.6-sol"
-reasoning_effort = "high"
+config_file = "agents/code-reviewer.toml"
 
 [agents.ic-generalist]
-config_file = ".codex/agents/ic-generalist.md"
-model = "gpt-5.6-terra"
-reasoning_effort = "medium"
-isolation = "worktree"
+config_file = "agents/ic-generalist.toml"
 
 [agents.ic-specialist-backend]
-config_file = ".codex/agents/ic-specialist-backend.md"
-model = "gpt-5.6-terra"
-reasoning_effort = "medium"
-isolation = "worktree"
+config_file = "agents/ic-specialist-backend.toml"
 
 [runtime.prompts]
 append_system_instruction = """

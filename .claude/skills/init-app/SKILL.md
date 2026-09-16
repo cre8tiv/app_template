@@ -15,7 +15,7 @@ Read `package.json`. If `name` is no longer `"app_template"` (or a placeholder l
 
 Ask (one question, or a couple if needed):
 
-- **App name** — a human-readable name (e.g. "Acme Invoicing"). Derive an npm-safe slug from it: lowercase, spaces/underscores → hyphens, strip anything not `[a-z0-9-]`.
+- **App name** — a human-readable name (e.g. "Acme Invoicing"). Derive an npm-safe slug from it: lowercase, spaces/underscores → hyphens, strip anything not `[a-z0-9-]`, and require the result to be non-empty; if sanitization produces an empty slug, reject the name and ask the user for another app name before writing `package.json`.
 - **Short one-line description**, if they want one in the README. Optional — skip if they don't have one yet, don't block on it.
 
 Don't ask about things you can decide yourself (port numbers, file names) — only ask what's genuinely the user's call.
@@ -24,7 +24,7 @@ Don't ask about things you can decide yourself (port numbers, file names) — on
 
 - `package.json`: set `"name"` to the slug.
 - `supabase/config.toml`: set `project_id = "<slug>"` (line 1). This is what namespaces the local Supabase Docker containers — leaving it as `app-template` is what causes container-name collisions when someone runs two clones of this template side by side, which is the exact problem the env-var port mapping in this file already solves for ports.
-- `README.md`: replace the `# App Template` title with the app name, and the one-line description under it with the user's description (or leave the existing generic sentence if they didn't give one). Also update the Mailpit URL in the "Included" list to use the configured `SUPABASE_MAILPIT_PORT` (default `54324`) instead of a hardcoded port — e.g. `http://127.0.0.1:${SUPABASE_MAILPIT_PORT}`. Leave the rest of the README (setup steps, scripts, quality gates) as-is — it's still accurate.
+- `README.md`: replace the `# App Template` title with the app name, and the one-line description under it with the user's description (or leave the existing generic sentence if they didn't give one). Also update the Mailpit URL in the "Included" list to use the resolved numeric `SUPABASE_MAILPIT_PORT` after any port remap, while preserving the existing fallback/default behavior and the rest of the README (setup steps, scripts, quality gates) as-is — it's still accurate.
 
 ## 3. Check for local Supabase port collisions
 
@@ -43,7 +43,7 @@ If any port is taken:
 - Pick a free replacement (e.g. bump by 10, re-check, repeat until free). Each candidate must be distinct from **every** configured Supabase port and from all replacements already selected for other colliding ports in this pass — not just not actively listening. Re-check and increment until a globally unused port is found.
 - Create `.env.local` from `.env.example` if it doesn't exist yet.
 - Uncomment and set the colliding `SUPABASE_*_PORT` var(s) in `.env.local` to the new value(s).
-- If `SUPABASE_API_PORT` changed, also update `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` to match (`http://127.0.0.1:<new port>`).
+- If `SUPABASE_API_PORT` changed, update `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` only when it currently points to the previous local API port; if it already points at a hosted URL or anything else, leave it unchanged and report that the existing endpoint was retained. When it does need to change, set it to match the new local port (`http://127.0.0.1:<new port>`).
 
 If nothing is taken, leave `.env.local` untouched (or don't create it) — the defaults in `scripts/supabase.mjs` already cover the no-collision case.
 

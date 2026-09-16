@@ -45,7 +45,11 @@ By default, `cavecrew-reviewer` and `cavecrew-investigator` pin `model: haiku` i
 Example — run reviewer on sonnet, keep others on default:
 
 ```sh
-export CAVECREW_REVIEWER_MODEL=sonnet
+export CAVECREW_REVIEWER_MODEL=sonnet    # POSIX shell
+```
+
+```powershell
+$env:CAVECREW_REVIEWER_MODEL = "sonnet"  # PowerShell
 ```
 
 Use the same model name strings you'd use in any Claude Code agent frontmatter (e.g. `haiku`, `sonnet`, `opus`).
@@ -58,4 +62,4 @@ Overrides patch only the `model:` line in the installed agent's frontmatter; the
 - [`agents/cavecrew-investigator.md`](../../agents/cavecrew-investigator.md)
 - [`agents/cavecrew-builder.md`](../../agents/cavecrew-builder.md)
 - [`agents/cavecrew-reviewer.md`](../../agents/cavecrew-reviewer.md)
-- [Caveman README](../../README.md) — repo overview
+- [Caveman README](../caveman/README.md) — caveman skill overview

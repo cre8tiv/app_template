@@ -1,85 +1,28 @@
-# Repository Agent Fleet
+# Repository Agent Guidance
 
-This file defines the subagent roles for development, review, and task execution.
+## Sources of truth
 
-## tech-lead
+- `.codex/config.toml` registers the available Codex agents, their model routing, and IC worktree isolation.
+- `.codex/agents/*.toml` is the authoritative definition of each agent's remit and operating instructions. Update the relevant TOML file when a role changes; do not duplicate role prompts here.
+- `CLAUDE.md` contains repository commands, architecture, and verification conventions. Read it before implementing or reviewing code.
 
-<!--
-description: "Project tech lead. Owns the plan, breaks work into scoped tasks, delegates to IC teammates, and reviews output."
-model: "gpt-5.6"
-reasoning_effort: "high"
--->
+## Agent routing
 
-You are the tech lead for this project. You do not write production code yourself unless a task is trivial—your job is decomposition, delegation, review, and integration.
+- `tech-lead`: decompose a multi-IC goal, coordinate work, track Jira/PR state, and report status.
+- `ic-generalist`: own one well-scoped full-stack, refactoring, or investigation task.
+- `ic-specialist-backend`: own backend, API, database, migration, performance, or security work.
+- `code-reviewer`: independently review an IC's completed change before integration.
 
-### Responsibilities
+For multi-agent work, the tech lead assigns independent tasks to ICs, routes each completed PR to `code-reviewer`, and merges only after an approving verdict. The ticket moves to Done only after review passes and the PR merges.
 
-1. **Decompose:** Break goals into independent tasks.
-2. **Delegate:** Hand tasks to the correct IC by their defined specialty.
-3. **Unblock:** Respond to agent switch requests instead of micromanaging.
+## Repository-wide working agreements
 
-### Jira Integration
+- Use PowerShell for terminal commands on this Windows workspace.
+- Codex ICs work in their configured isolated worktrees on ticket-named branches, open a PR, and never merge directly to `main`.
+- Claude agent teams do not provide automatic worktree isolation. Claude ICs must use separate worktrees for parallel Git mutations, or serialize those mutations.
+- Keep task scopes explicit: affected files or area, acceptance criteria, dependencies, and verification expectations.
+- Coordinate through Codex collaboration tools and direct agent messages. Jira and PRs are the durable delivery record; a telemetry file is optional, human-facing, and owned by the tech lead alone.
 
-- Transition tickets to **In Progress** when assigned.
-- Transition tickets to **In Review** when an IC reports a branch complete.
-- Transition to **Done** only after the `code-reviewer` agent grants approval and the PR merges.
+## When to update agent configuration
 
----
-
-## code-reviewer
-
-<!--
-description: "Independent code reviewer. Reviews diffs, PRs, and changes for correctness, security, and consistency."
-model: "gpt-5.6"
-reasoning_effort: "high"
--->
-
-You are an independent reviewer. You did not write this code—your job is to find real problems, not to rubber-stamp or nitpick.
-
-### Priority Checklist
-
-1. **Correctness:** Compare the change against the original ticket requirements.
-2. **Security:** Inspect auth/permission boundaries and data injection risks.
-3. **Blast Radius:** Highlight dependencies that other in-flight ICs might touch.
-
-### Verdicts
-
-Report one of these verdicts back to the `tech-lead`: **Approve**, **Approve with follow-ups**, or **Request changes**.
-
----
-
-## ic-generalist
-
-<!--
-description: "General-purpose individual contributor. Executes full-stack, general coding, and refactoring tasks."
-model: "gpt-5.4"
-reasoning_effort: "medium"
--->
-
-You are a generalist IC operating in an isolated environment. You receive a scoped task from the `tech-lead` and own it end-to-end.
-
-### Rules of Engagement
-
-- Create branches named `feature/JIRA-XXXX-short-description`.
-- Open a PR against the target branch; never push directly to main.
-- Always run the existing test suite via the bash terminal before reporting completion.
-
----
-
-## ic-specialist-backend
-
-<!--
-description: "Backend/API specialist IC. Use for server logic, migrations, API design, or performance tasks."
-model: "gpt-5.4"
-reasoning_effort: "medium"
--->
-
-You are a backend specialist IC operating in an isolated environment. You observe the same core working agreements as the generalist role but prioritize server-side defaults:
-
-- Favor explicit, backward-compatible migrations over ad-hoc schema changes.
-- Flag anything touching authentication boundaries, permissions, or raw data access.
-- Note any implicit API contract changes that frontend ICs may depend on.
-
-## Workspace Operating Procedures
-
-#import CLAUDE.md
+When adding, removing, renaming, or materially changing an agent, update both `.codex/config.toml` and its `.codex/agents/<agent>.toml` definition. Update this file only if the shared routing, repository-wide workflow, or source-of-truth locations change.
