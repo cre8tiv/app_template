@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-"""
+#!/usr/bin/env python3        if attempt == MAX_RETRIES:"""
 Caveman Memory Compression Orchestrator
 
 Usage:
@@ -302,8 +301,7 @@ def compress_file(filepath: Path) -> bool:
         print("Skipping (not natural language)")
         return False
 
-    original_text = filepath.read_text(encoding="utf-8", errors="ignore")
-    # Store backup outside the source directory so skill auto-loaders don't
+    original_text = filepath.read_text(encoding="utf-8")    # Store backup outside the source directory so skill auto-loaders don't
     # re-ingest the `.original.md` copy as a live file. Mirror the source's
     # parent-dir name + stem under a platform-aware base to reduce collisions.
     backup_dir = backup_dir_for(filepath)
@@ -351,6 +349,17 @@ def compress_file(filepath: Path) -> bool:
 
     # Reassemble: frontmatter (verbatim) + compressed body
     compressed = frontmatter + compressed_body
+
+    # Guard against a prose preamble smuggled in ahead of the real content
+    # (issue #588). Only enforced when the original body starts with a
+    # structural anchor (heading) — plain-prose first lines get legitimately
+    # rewritten by compression, and requiring them verbatim would reject
+    # every valid compression.
+    body_anchor = first_nonblank_line(body)
+    if body_anchor.startswith("#") and first_nonblank_line(compressed_body) != body_anchor:
+        print("❌ Compression aborted: output does not start with the original's first heading.")
+        print("   Possible preamble leak. Original file is untouched (no backup created).")
+        return False
 
     # Save original as backup, then verify the backup readback before
     # touching the input file. If the filesystem dropped bytes (encoding,
