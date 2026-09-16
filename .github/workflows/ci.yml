@@ -11,6 +11,7 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: ci-placeholder-service-role-key
     steps:
       - uses: actions/checkout@v4
 
@@ -19,9 +20,15 @@ jobs:
           node-version: 20
           cache: npm
 
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run format:check
       - run: npm run test
+      - run: npm run supabase -- start
+      - run: npm run test:db
       - run: npm run build

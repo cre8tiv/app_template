@@ -5,6 +5,7 @@ from pathlib import Path
 
 URL_REGEX = re.compile(r"https?://[^\s)]+")
 FENCE_OPEN_REGEX = re.compile(r"^(\s{0,3})(`{3,}|~{3,})(.*)$")
+INDENTED_BLOCK_REGEX = re.compile(r"^( {4}|\t)")
 HEADING_REGEX = re.compile(r"^(#{1,6})\s+(.*)", re.MULTILINE)
 BULLET_REGEX = re.compile(r"^\s*[-*+]\s+", re.MULTILINE)
 
@@ -39,12 +40,12 @@ def extract_headings(text):
 
 
 def extract_code_blocks(text):
-    """Line-based fenced code block extractor.
+    """Line-based fenced and indented code block extractor.
 
     Handles ``` and ~~~ fences with variable length (CommonMark: closing
     fence must use same char and be at least as long as opening). Supports
     nested fences (e.g. an outer 4-backtick block wrapping inner 3-backtick
-    content).
+    content). Also detects four-space/tab-indented CommonMark code blocks.
     """
     blocks = []
     lines = text.split("\n")
@@ -52,33 +53,48 @@ def extract_code_blocks(text):
     n = len(lines)
     while i < n:
         m = FENCE_OPEN_REGEX.match(lines[i])
-        if not m:
+        if m:
+            fence_char = m.group(2)[0]
+            fence_len = len(m.group(2))
+            open_line = lines[i]
+            block_lines = [open_line]
             i += 1
-            continue
-        fence_char = m.group(2)[0]
-        fence_len = len(m.group(2))
-        open_line = lines[i]
-        block_lines = [open_line]
-        i += 1
-        closed = False
-        while i < n:
-            close_m = FENCE_OPEN_REGEX.match(lines[i])
-            if (
-                close_m
-                and close_m.group(2)[0] == fence_char
-                and len(close_m.group(2)) >= fence_len
-                and close_m.group(3).strip() == ""
-            ):
+            closed = False
+            while i < n:
+                close_m = FENCE_OPEN_REGEX.match(lines[i])
+                if (
+                    close_m
+                    and close_m.group(2)[0] == fence_char
+                    and len(close_m.group(2)) >= fence_len
+                    and close_m.group(3).strip() == ""
+                ):
+                    block_lines.append(lines[i])
+                    closed = True
+                    i += 1
+                    break
                 block_lines.append(lines[i])
-                closed = True
                 i += 1
-                break
-            block_lines.append(lines[i])
+            if closed:
+                blocks.append("\n".join(block_lines))
+            # Unclosed fences are silently skipped — they indicate malformed
+            # markdown and including them would cause false-positive validation.
+            continue
+
+        # Four-space/tab-indented CommonMark code block (fences take priority).
+        if INDENTED_BLOCK_REGEX.match(lines[i]):
+            block_lines = [lines[i]]
             i += 1
-        if closed:
-            blocks.append("\n".join(block_lines))
-        # Unclosed fences are silently skipped — they indicate malformed markdown
-        # and including them would cause false-positive validation failures.
+            while i < n:
+                if INDENTED_BLOCK_REGEX.match(lines[i]) or lines[i].strip() == "":
+                    block_lines.append(lines[i])
+                    i += 1
+                else:
+                    break
+            if any(line.strip() for line in block_lines):
+                blocks.append("\n".join(block_lines))
+            continue
+
+        i += 1
     return blocks
 
 
@@ -119,7 +135,7 @@ def validate_headings(orig, comp, result):
         result.add_error(f"Heading count mismatch: {len(h1)} vs {len(h2)}")
 
     if h1 != h2:
-        result.add_warning("Heading text/order changed")
+        result.add_error("Heading text/order changed")
 
 
 def validate_code_blocks(orig, comp, result):
@@ -143,7 +159,7 @@ def validate_paths(orig, comp, result):
     p2 = extract_paths(comp)
 
     if p1 != p2:
-        result.add_warning(f"Path mismatch: lost={p1 - p2}, added={p2 - p1}")
+        result.add_error(f"Path mismatch: lost={p1 - p2}, added={p2 - p1}")
 
 
 def validate_bullets(orig, comp, result):

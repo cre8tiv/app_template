@@ -11,9 +11,9 @@ Write code review comments terse and actionable. One line per finding. Location,
 
 ## Rules
 
-**Format:** `L<line>: <problem>. <fix>.` — or `<file>:L<line>: ...` when reviewing multi-file diffs.
+**Format:** `L<line>: <severity> <problem>. <fix>.` — or `<file>:L<line>: ...` when reviewing multi-file diffs.
 
-**Severity prefix (optional, when mixed):**
+**Severity field (one per comment):**
 
 - `🔴 bug:` — broken behavior, will cause incident
 - `🟡 risk:` — works but fragile (race, missing null check, swallowed error)

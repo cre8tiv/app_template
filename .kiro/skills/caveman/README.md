@@ -4,18 +4,18 @@ Talk like smart caveman. Same brain, fewer tokens.
 
 ## What it does
 
-Compress every model response to caveman-style prose. Drops articles, filler, pleasantries, and hedging. Keeps every technical detail, code block, error string, and symbol exact. Cuts 65% of output tokens (measured) with full accuracy preserved. Mode persists for the whole session until changed or stopped.
+Compress every model response to caveman-style prose. Drops articles, filler, pleasantries, and hedging. Keeps every technical detail and code block exact. Preserves decisive error lines verbatim; long raw error logs summarized unless explicitly requested. Cuts 65% of output tokens (measured) with full accuracy preserved. Mode persists for the whole session until changed or stopped.
 
 Six intensity levels:
 
-| Level          | What change                                                         |
-| -------------- | ------------------------------------------------------------------- |
-| `lite`         | Drop filler/hedging. Sentences stay full. Professional but tight.   |
-| `full`         | Default. Drop articles, fragments OK, short synonyms.               |
-| `ultra`        | Bare fragments. Abbreviations (DB, auth, fn). Arrows for causality. |
-| `wenyan-lite`  | Classical Chinese register, light compression.                      |
-| `wenyan-full`  | Maximum 文言文. 80-90% character reduction.                         |
-| `wenyan-ultra` | Extreme classical compression.                                      |
+| Level          | What change                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| `lite`         | Drop filler/hedging. Sentences stay full. Professional but tight. |
+| `full`         | Default. Drop articles, fragments OK, short synonyms.             |
+| `ultra`        | Bare fragments. Abbreviations (DB, auth, fn). No causal arrows.   |
+| `wenyan-lite`  | Classical Chinese register, light compression.                    |
+| `wenyan-full`  | Maximum 文言文. 80-90% character reduction.                       |
+| `wenyan-ultra` | Extreme classical compression.                                    |
 
 Auto-clarity rule: caveman drops to normal prose for security warnings, irreversible-action confirmations, multi-step sequences where fragment ambiguity risks misread, and when user repeats a question. Resumes after the clear part.
 
@@ -43,7 +43,7 @@ Caveman (full):
 
 Caveman (ultra):
 
-> Inline obj prop → new ref → re-render. `useMemo`.
+> Inline obj prop, new ref, re-render. `useMemo`.
 
 ## See also
 

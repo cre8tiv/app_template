@@ -24,7 +24,9 @@ Run tests matching a name: `npx vitest run -t "renders setup guidance"`
 
 Local dev requires `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local` — copy `.env.example` and fill in values (from `npm run supabase:start` output, or a hosted Supabase project).
 
-**Enforcement**: `.husky/pre-push` runs lint, typecheck, and test before every `git push`. `.github/workflows/ci.yml` runs lint, typecheck, format:check, test, and build with placeholder Supabase env vars on every push/PR. The `main` branch requires the `build` CI job to pass before merge (branch protection, `enforce_admins: true` — no bypass). Use the `pr-review` skill for a stack-specific review pass before opening a PR.
+**Enforcement**: `.husky/pre-commit` runs `lint-staged` (Prettier on staged files) before every `git commit`. `.husky/pre-push` runs lint, typecheck, and test before every `git push`. `.github/workflows/ci.yml` runs lint, typecheck, format:check, test, and build with placeholder Supabase env vars on every push/PR. The `main` branch requires the `build` CI job to pass before merge (branch protection, `enforce_admins: true` — no bypass). Use the `pr-review` skill for a stack-specific review pass before opening a PR.
+
+**Browser testing**: this repo's `.mcp.json` configures the Playwright MCP server. Use it (not a one-off script) to drive a real browser and verify anything built or changed in the UI — navigate, click, fill forms, take snapshots/screenshots — before reporting a frontend change complete. It writes session state to `.playwright-mcp/`, which is gitignored.
 
 ## Architecture
 

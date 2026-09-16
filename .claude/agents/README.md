@@ -2,14 +2,14 @@
 
 ## What this is
 
-A tech lead + 2 ICs (one generalist, one backend specialist) for a single project.
+A tech lead + 2 ICs (one generalist, one backend specialist) + a code reviewer for a single project.
 
 ## Setup
 
-1. Copy these three `.md` files into your project's `.claude/agents/` directory:
+1. Copy these four `.md` files into your project's `.claude/agents/` directory:
 
    ```
-   cp tech-lead.md ic-generalist.md ic-specialist-backend.md /path/to/project/.claude/agents/
+   cp tech-lead.md ic-generalist.md ic-specialist-backend.md code-reviewer.md /path/to/project/.claude/agents/
    ```
 
 2. Enable agent teams for the session:
