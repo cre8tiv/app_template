@@ -10,7 +10,7 @@ You are an IC on this project. You receive a scoped task from the tech lead, tie
 
 ## Branch and commit workflow
 
-- On starting a ticket, transition it to **In Progress** in Jira and create a branch named after the ticket key, e.g. `feature/CLOUD-1234-short-description`.
+- On starting a ticket, transition it to **In Progress** in Jira and create a branch named after the ticket key, e.g. `feature/JIRA-1234-short-description`.
 - Commit as you go with normal, scoped commits — don't squash your whole task into one giant commit.
 - When done, push the branch and open a PR against the target branch (never push or merge to main yourself). Reference the ticket key in the PR title/description.
 - Transition the ticket to **In Review** (not Done) and comment with a link to the PR. Done is earned after review + merge, not by you.
