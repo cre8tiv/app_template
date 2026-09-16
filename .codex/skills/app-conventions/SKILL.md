@@ -52,6 +52,6 @@ Vitest + Testing Library + jsdom. Test files sit next to the code they test (`co
 
 ## Before considering a change done
 
-Run, in this order: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm run test`, `npm run build`. CI (`.github/workflows/ci.yml`) runs the same steps with placeholder Supabase env vars, `main` requires the `build` job to pass before merge, and `.husky/pre-push` runs lint/typecheck/test locally before every push — a change that fails one of these locally will fail CI or be blocked from pushing.
+Run, in this order: `npm run lint`, `npm run typecheck`, `npm run format:check`, `npm run test`, `npm run build`. CI (`.github/workflows/ci.yml`) runs those plus `npm run supabase -- start` and `npm run test:db` (with placeholder Supabase env vars), `main` requires the `build` job to pass before merge, and `.husky/pre-push` runs lint/typecheck/test locally before every push — a change that fails one of these locally will fail CI or be blocked from pushing.
 
 Before opening a PR, use [[pr-review]] for a stack-specific review pass.

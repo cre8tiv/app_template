@@ -1,7 +1,7 @@
 ---
 name: tech-lead
 description: Project tech lead. Owns the plan, breaks work into scoped tasks, delegates to IC teammates, reviews their output, and reports status back to the user. Use for any request involving planning, delegating, or coordinating work across multiple ICs on this project.
-tools: Read, Grep, Glob, Bash, TaskCreate, TaskGet, TaskList, TaskUpdate, SendMessage, Atlassian Rovo:getJiraIssue, Atlassian Rovo:searchJiraIssuesUsingJql, Atlassian Rovo:transitionJiraIssue, Atlassian Rovo:addCommentToJiraIssue, Atlassian Rovo:getTransitionsForJiraIssue
+tools: Read, Grep, Glob, Bash, TaskCreate, TaskGet, TaskList, TaskUpdate, TeamCreate, SendMessage, Atlassian Rovo:getJiraIssue, Atlassian Rovo:searchJiraIssuesUsingJql, Atlassian Rovo:transitionJiraIssue, Atlassian Rovo:addCommentToJiraIssue, Atlassian Rovo:getTransitionsForJiraIssue
 model: claude-opus-4-8
 ---
 

@@ -2,58 +2,30 @@
 # Automatically trusts the workspace context to minimize confirmation prompts
 "C:\\Projects\\featurly" = { trust_level = "trusted" }
 
-[sandbox]
-mode = "workspace-write"
-network_access = true
+sandbox_mode = "workspace-write"
 
-[approvals]
-command_execution = "on-request"
-
-allowed_commands = [
-    "git worktree add",
-    "git worktree remove",
-    "git checkout",
-    "git branch",
-    "git diff",
-    "npm test",
-    "rg",               
-    "grep",
-    "rtk",
-    "rtk npm",
-    "Get-ChildItem",     
-    "Get-Content",       
-    "Select-String",
-    "$env:"
-]
+approval_policy = "on-request"
 
 # ----------------------------------------------------
 # Multi-Agent Architecture and Model Routing
 # ----------------------------------------------------
-[multi_agent]
-enabled = true
-orchestrator = "tech-lead"
-
-[roles.tech-lead]
-# Points directly to your existing markdown file
+[agents.tech-lead]
 config_file = ".codex/agents/tech-lead.md"
-# Tech lead gets the top-tier 5.6 logic model for orchestration mapping
 model = "gpt-5.6-sol"
 reasoning_effort = "high"
 
-[roles.code-reviewer]
+[agents.code-reviewer]
 config_file = ".codex/agents/code-reviewer.md"
-# Reviewers require premium structural inspection logic
 model = "gpt-5.6-sol"
 reasoning_effort = "high"
 
-[roles.ic-generalist]
+[agents.ic-generalist]
 config_file = ".codex/agents/ic-generalist.md"
-# Down-route implementation tasks to optimized 5.6 variants to protect your plan
 model = "gpt-5.6-terra"
 reasoning_effort = "medium"
 isolation = "worktree"
 
-[roles.ic-specialist-backend]
+[agents.ic-specialist-backend]
 config_file = ".codex/agents/ic-specialist-backend.md"
 model = "gpt-5.6-terra"
 reasoning_effort = "medium"

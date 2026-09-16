@@ -217,7 +217,8 @@ def call_claude(prompt: str) -> str:
             check=True,
             encoding="utf-8",
             errors="replace",
-        )
+            timeout=120,
+        )        
         return strip_llm_wrapper(result.stdout.strip())
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"Claude call failed:\n{e.stderr}")
@@ -365,16 +366,34 @@ def compress_file(filepath: Path) -> bool:
         except OSError:
             pass
         return False
-    _write_target(filepath, compressed, backup_path)
+    # Write compressed to a temporary file for validation before replacing the
+    # target. This way the original filepath is never touched unless validation
+    # passes — an unvalidated candidate never becomes the live file.
+    tmp_fd, tmp_path_str = tempfile.mkstemp(
+        dir=str(filepath.parent), prefix=filepath.name + ".", suffix=".tmp"
+    )
+    tmp_path = Path(tmp_path_str)
+    try:
+        with os.fdopen(tmp_fd, "wb") as f:
+            f.write(compressed.encode("utf-8"))
+            f.flush()
+            os.fsync(f.fileno())
+        if filepath.exists():
+            os.chmod(tmp_path, stat.S_IMODE(filepath.stat().st_mode))
+    except Exception:
+        tmp_path.unlink(missing_ok=True)
+        raise
 
-    # Step 2: Validate + Retry
-    for attempt in range(MAX_RETRIES):
+    # Step 2: Validate + Retry (validate against temp, not the real target)
+    # MAX_RETRIES=2 → 3 total validation attempts: 1 initial + 2 repair retries.
+    for attempt in range(MAX_RETRIES + 1):
         print(f"\nValidation attempt {attempt + 1}")
 
-        result = validate(backup_path, filepath)
+        result = validate(backup_path, tmp_path)
 
         if result.is_valid:
             print("Validation passed")
+            os.replace(tmp_path, filepath)
             break
 
         print("❌ Validation failed:")
@@ -382,8 +401,7 @@ def compress_file(filepath: Path) -> bool:
             print(f"   - {err}")
 
         if attempt == MAX_RETRIES - 1:
-            # Restore original on failure
-            _write_target(filepath, original_text, backup_path)
+            tmp_path.unlink(missing_ok=True)
             backup_path.unlink(missing_ok=True)
             print("❌ Failed after retries — original restored")
             return False
@@ -409,6 +427,6 @@ def compress_file(filepath: Path) -> bool:
             print("   Possible preamble leak. Skipping this attempt.")
             continue
 
-        _write_target(filepath, compressed, backup_path)
+        write_text_atomic(tmp_path, compressed)
 
     return True

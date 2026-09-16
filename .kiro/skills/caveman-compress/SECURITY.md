@@ -14,7 +14,7 @@
 
 - Does not execute user file content as code
 - Does not make network requests except to Anthropic's API (via SDK or CLI)
-- Does not access files outside the path the user provides
+- Does not access files outside the target file and the documented backup location (`$XDG_DATA_HOME/caveman-compress/backups/` or `%LOCALAPPDATA%\caveman-compress\backups\`)
 - Does not use shell=True or string interpolation in subprocess calls
 - Does not collect or transmit any data beyond the file being compressed
 

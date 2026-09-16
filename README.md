@@ -16,7 +16,9 @@ A starter template built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 - Reusable UI primitives in `components/ui` (Button, Input, Label, Card)
 - GitHub Actions CI (lint, typecheck, format check, test, build) required on `main` via branch protection
 - Husky pre-push hook running lint, typecheck, and test before every push
-- `.claude/skills/init-app`, `.claude/skills/app-conventions`, and `.claude/skills/pr-review` — one-time template customization, this template's conventions, and a stack-specific PR review checklist for Claude Code
+- `.claude/skills/init-app` — one-time template customization
+- `.codex/skills/app-conventions` — this template's conventions
+- `.codex/skills/pr-review` — a stack-specific PR review checklist for Claude Code
 
 ## Local setup
 

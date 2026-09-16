@@ -24,7 +24,7 @@ Don't ask about things you can decide yourself (port numbers, file names) — on
 
 - `package.json`: set `"name"` to the slug.
 - `supabase/config.toml`: set `project_id = "<slug>"` (line 1). This is what namespaces the local Supabase Docker containers — leaving it as `app-template` is what causes container-name collisions when someone runs two clones of this template side by side, which is the exact problem the env-var port mapping in this file already solves for ports.
-- `README.md`: replace the `# App Template` title with the app name, and the one-line description under it with the user's description (or leave the existing generic sentence if they didn't give one). Leave the rest of the README (setup steps, scripts, quality gates) as-is — it's still accurate.
+- `README.md`: replace the `# App Template` title with the app name, and the one-line description under it with the user's description (or leave the existing generic sentence if they didn't give one). Also update the Mailpit URL in the "Included" list to use the configured `SUPABASE_MAILPIT_PORT` (default `54324`) instead of a hardcoded port — e.g. `http://127.0.0.1:${SUPABASE_MAILPIT_PORT}`. Leave the rest of the README (setup steps, scripts, quality gates) as-is — it's still accurate.
 
 ## 3. Check for local Supabase port collisions
 
@@ -40,7 +40,7 @@ or `Get-NetTCPConnection -LocalPort 54321 -ErrorAction SilentlyContinue`. This m
 
 If any port is taken:
 
-- Pick a free replacement (e.g. bump by 10, re-check, repeat until free).
+- Pick a free replacement (e.g. bump by 10, re-check, repeat until free). Each candidate must be distinct from **every** configured Supabase port and from all replacements already selected for other colliding ports in this pass — not just not actively listening. Re-check and increment until a globally unused port is found.
 - Create `.env.local` from `.env.example` if it doesn't exist yet.
 - Uncomment and set the colliding `SUPABASE_*_PORT` var(s) in `.env.local` to the new value(s).
 - If `SUPABASE_API_PORT` changed, also update `NEXT_PUBLIC_SUPABASE_URL` in `.env.local` to match (`http://127.0.0.1:<new port>`).

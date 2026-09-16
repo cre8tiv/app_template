@@ -16,6 +16,8 @@ npm run lint
 npm run typecheck
 npm run format:check
 npm run test
+npm run supabase -- start
+npm run test:db
 npm run build
 ```
 
