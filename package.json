@@ -12,6 +12,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:db": "node scripts/supabase.mjs test db",
     "supabase": "node scripts/supabase.mjs",
     "supabase:start": "node scripts/supabase.mjs start",
     "supabase:status": "node scripts/supabase.mjs status",
