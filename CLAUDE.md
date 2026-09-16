@@ -9,6 +9,7 @@ npm run dev             # Start Next.js dev server
 npm run build            # Production build
 npm run start             # Run production server
 npm run lint              # ESLint
+npm run lint:fix           # ESLint --fix
 npm run typecheck          # next typegen && tsc --noEmit
 npm run format             # Prettier write
 npm run format:check        # Prettier check
